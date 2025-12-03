@@ -1,0 +1,80 @@
+table Vendas
+	lineageTag: 43555d23-097c-4779-9599-a4fd007463d3
+
+	column Ano
+		dataType: int64
+		formatString: 0
+		lineageTag: f8996c9c-91f7-48bb-acdf-189acf3bdb4f
+		summarizeBy: sum
+		sourceColumn: Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mês
+		dataType: int64
+		formatString: 0
+		lineageTag: b96b70d6-68b8-4a27-9bf1-04ab59d4dd44
+		summarizeBy: sum
+		sourceColumn: Mês
+
+		annotation SummarizationSetBy = Automatic
+
+	column Produto
+		dataType: string
+		lineageTag: fd67ec12-ced4-4cbe-b0fe-0423baf3fa79
+		summarizeBy: none
+		sourceColumn: Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quantidade Vendida'
+		dataType: int64
+		formatString: 0
+		lineageTag: 354bdb80-8895-46ed-801f-7fd6278eada2
+		summarizeBy: sum
+		sourceColumn: Quantidade Vendida
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Valor Vendido'
+		dataType: int64
+		formatString: 0
+		lineageTag: 21a9aa14-22e8-4fc2-bdee-8fc8fb12fac1
+		summarizeBy: sum
+		sourceColumn: Valor Vendido
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Custo da Venda'
+		dataType: int64
+		formatString: 0
+		lineageTag: 331ac5b0-887a-4c7d-9e9d-e5de2dddfa9e
+		summarizeBy: sum
+		sourceColumn: Custo da Venda
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Meta de Venda'
+		dataType: int64
+		formatString: 0
+		lineageTag: 0a58eb87-5621-4413-b4fa-4e849e039325
+		summarizeBy: sum
+		sourceColumn: Meta de Venda
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Vendas = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\Elias\Documents\Dashboards - PBI\Baixar materiais complementares\Bases\Base_Comercial.xlsx"), null, true),
+				    Sheet1_Sheet = Fonte{[Item="Sheet1",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Ano", Int64.Type}, {"Mês", Int64.Type}, {"Produto", type text}, {"Quantidade Vendida", Int64.Type}, {"Valor Vendido", Int64.Type}, {"Custo da Venda", Int64.Type}, {"Meta de Venda", Int64.Type}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

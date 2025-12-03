@@ -1,0 +1,74 @@
+table Produto
+	lineageTag: 42a7c66e-afe6-4109-9254-87880c93ac90
+
+	column Produto
+		dataType: string
+		lineageTag: 22c24fd4-1ca6-4313-b6ce-ae674ff64fb0
+		summarizeBy: none
+		sourceColumn: Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cor 1'
+		dataType: string
+		lineageTag: 7b362590-1ff6-4693-b544-1ab1dd820780
+		summarizeBy: none
+		sourceColumn: Cor 1
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cor 2'
+		dataType: string
+		lineageTag: 7a04e826-2fc9-45f5-813c-7184da9557b0
+		summarizeBy: none
+		sourceColumn: Cor 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column URL_LOGO
+		dataType: string
+		lineageTag: cf237a50-af43-4c11-b35e-587f035bf952
+		summarizeBy: none
+		sourceColumn: URL_LOGO
+
+		annotation SummarizationSetBy = Automatic
+
+	column URL
+		dataType: string
+		lineageTag: f34f1d4a-ad74-4615-b938-9b65e73618e7
+		summarizeBy: none
+		sourceColumn: URL
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cor 3'
+		dataType: string
+		lineageTag: 6485fb49-0bd1-437f-a7c0-32fb126474ee
+		summarizeBy: none
+		sourceColumn: Cor 3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cor 4'
+		dataType: string
+		lineageTag: 59622ca3-3a3e-46f2-a9ed-ce0b04a616e2
+		summarizeBy: none
+		sourceColumn: Cor 4
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Produto = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\Elias\Documents\Dashboards - PBI\Baixar materiais complementares\Bases\Base_Produto.xlsx"), null, true),
+				    Página1_Sheet = Fonte{[Item="Página1",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Página1_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Produto", type text}, {"Cor 1", type text}, {"Cor 2", type text}, {"URL_LOGO", type text}, {"URL", type text}, {"Cor 3", type text}, {"Cor 4", type text}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

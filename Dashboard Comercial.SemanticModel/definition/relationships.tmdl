@@ -1,0 +1,4 @@
+relationship AutoDetected_4e00b7d4-9eea-4d25-9d14-416da1fc840d
+	fromColumn: Vendas.Produto
+	toColumn: Produto.Produto
+
