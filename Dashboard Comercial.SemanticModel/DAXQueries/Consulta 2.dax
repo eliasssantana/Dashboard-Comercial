@@ -1,0 +1,270 @@
+DEFINE
+	/// Cria um Tool Tip personalizado
+	FUNCTION fxToolTip = () =>
+	
+		VAR PRODUTO = SELECTEDVALUE(Produto[Produto])
+
+		VAR COR1 = SELECTEDVALUE(Produto[Cor 1])
+		VAR COR2 = SELECTEDVALUE(Produto[Cor 2])
+
+		VAR COR3 = SELECTEDVALUE(Produto[Cor 3])
+		VAR COR4 = SELECTEDVALUE(Produto[Cor 4])
+
+		VAR PERC_META = [% Meta]
+
+		VAR PERC_META_FT = ROUND(PERC_META * 100, 1)
+
+		RETURN
+
+
+		"<!DOCTYPE html>
+		<html lang=""pt-br"">
+		<head>
+			<meta charset=""UTF-8"">
+			<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+			<title>Card KPI Animado</title>
+			<link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"">
+			<style>
+				/* Variáveis para personalização com RGBA */
+				:root {
+					--cor1: #"&COR1&";        /* Vermelho escuro - cor primária */
+					--cor2: #"&COR2&";        /* Rosa claro - cor secundária */
+					--cor1-rgba: "&COR3&";   /* Valores RGB para cor1 */
+					--cor2-rgba: "&COR4&"; /* Valores RGB para cor2 */
+					
+					--fundo-escuro: #0a0a10; 
+					--fundo-card: rgba(26, 26, 36, 0.9);
+					--texto-claro: #ffffff; 
+					--texto-secundario: #c0c0d0; 
+					--transicao: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+					--sombra: 0 10px 30px rgba(var(--cor1-rgba), 0.4); 
+					--borda-card: rgba(var(--cor1-rgba), 0.2);
+				}
+
+				* {
+					margin: 0;
+					padding: 0;
+					box-sizing: border-box;
+					font-family: 'Montserrat', 'Segoe UI', sans-serif;
+				}
+
+				body {
+					background: 
+						radial-gradient(circle at 10% 20%, rgba(var(--cor1-rgba), 0.05) 0%, transparent 20%),
+						radial-gradient(circle at 90% 80%, rgba(var(--cor2-rgba), 0.05) 0%, transparent 20%),
+						linear-gradient(135deg, var(--fundo-escuro) 0%, #0c0b15 100%);
+					color: var(--texto-claro);
+					min-height: 100vh;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					padding: 20px;
+					overflow: hidden;
+					position: relative;
+				}
+
+				body::before {
+					content: """";
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background: 
+						radial-gradient(circle, transparent 20%, var(--fundo-escuro) 80%),
+						repeating-linear-gradient(45deg, rgba(26, 26, 36, 0.05) 0px, rgba(26, 26, 36, 0.05) 1px, transparent 1px, transparent 11px),
+						repeating-linear-gradient(135deg, rgba(26, 26, 36, 0.05) 0px, rgba(26, 26, 36, 0.05) 1px, transparent 1px, transparent 11px);
+					background-size: cover;
+					z-index: -1;
+					opacity: 0.3;
+				}
+
+				/* Container para centralizar o card */
+				.container {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					height: 100vh;
+					perspective: 1000px;
+				}
+
+				/* Card KPI Pequeno */
+				.card-kpi {
+					width: 130px;
+					height: 130px;
+					background: var(--fundo-card);
+					border-radius: 20px;
+					padding: 15px;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+					position: relative;
+					overflow: hidden;
+					box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+					transition: var(--transicao);
+					border: 1px solid var(--borda-card);
+					backdrop-filter: blur(5px);
+					cursor: pointer;
+					transform: translateY(30px) scale(0.9) rotateX(15deg);
+					opacity: 0;
+					animation: cardEntrada 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+				}
+
+				.card-kpi::before {
+					content: '';
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background: radial-gradient(circle at center, rgba(var(--cor1-rgba), 0.15) 0%, transparent 70%);
+					opacity: 0;
+					transition: opacity 0.5s ease;
+					z-index: -1;
+				}
+
+				.card-kpi:hover {
+					transform: translateY(-8px) scale(1.05);
+					box-shadow: var(--sombra), 0 0 20px rgba(var(--cor1-rgba), 0.5);
+					border: 1px solid rgba(var(--cor1-rgba), 0.4);
+					z-index: 10;
+				}
+
+				.card-kpi:hover::before {
+					opacity: 0.8;
+				}
+
+				/* Ícone */
+				.icone-kpi {
+					font-size: 1.8rem;
+					margin-bottom: 10px;
+					color: var(--cor2);
+					text-shadow: 0 0 10px rgba(var(--cor2-rgba), 0.4);
+					transition: var(--transicao);
+				}
+
+				.card-kpi:hover .icone-kpi {
+					transform: scale(1.2);
+					color: var(--cor1);
+					text-shadow: 0 0 15px rgba(var(--cor1-rgba), 0.6);
+				}
+
+				/* Valor */
+				.valor-kpi {
+					font-size: 1.6rem;
+					font-weight: 800;
+					margin-bottom: 4px;
+					background: linear-gradient(to right, var(--cor2), var(--cor1));
+					-webkit-background-clip: text;
+					background-clip: text;
+					color: transparent;
+					text-shadow: 0 0 8px rgba(var(--cor2-rgba), 0.2);
+					transition: var(--transicao);
+				}
+
+				.card-kpi:hover .valor-kpi {
+					text-shadow: 0 0 12px rgba(var(--cor1-rgba), 0.4);
+				}
+
+				/* Título */
+				.titulo-kpi {
+					font-size: 0.75rem;
+					color: var(--texto-secundario);
+					text-align: center;
+					font-weight: 500;
+					letter-spacing: 0.5px;
+					transition: var(--transicao);
+				}
+
+				.card-kpi:hover .titulo-kpi {
+					color: var(--texto-claro);
+				}
+
+				/* Efeito de brilho interno */
+				.brilho-interno {
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+					opacity: 0;
+					transition: opacity 0.5s ease;
+					pointer-events: none;
+					z-index: 2;
+				}
+
+				.card-kpi:hover .brilho-interno {
+					opacity: 0.3;
+				}
+
+				/* Animações */
+				@keyframes cardEntrada {
+					0% { 
+						transform: translateY(50px) scale(0.8) rotateX(25deg);
+						opacity: 0; 
+						box-shadow: 0 0 0 rgba(var(--cor1-rgba), 0);
+					}
+					60% { 
+						transform: translateY(-15px) scale(1.05) rotateX(0);
+						opacity: 1; 
+						box-shadow: var(--sombra);
+					}
+					80% { 
+						transform: translateY(5px) scale(0.98);
+					}
+					100% { 
+						transform: translateY(0) scale(1) rotateX(0);
+						opacity: 1; 
+					}
+				}
+
+				@keyframes pulse {
+					0% { 
+						transform: scale(1);
+						box-shadow: var(--sombra);
+					}
+					50% { 
+						transform: scale(1.03);
+						box-shadow: 0 0 25px rgba(var(--cor1-rgba), 0.6);
+					}
+					100% { 
+						transform: scale(1);
+						box-shadow: var(--sombra);
+					}
+				}
+
+				/* Efeito de destaque ao clicar */
+				.card-kpi:active {
+					animation: pulse 0.4s ease;
+				}
+			</style>
+		</head>
+		<body>
+			<div class=""container"">
+				<div class=""card-kpi"">
+					<div class=""brilho-interno""></div>
+					<i class=""fas fa-rocket icone-kpi""></i>
+					<div class=""valor-kpi"">"& PERC_META_FT &"%</div>
+					<div class=""titulo-kpi"">% da Meta</div>
+				</div>
+			</div>
+
+			<script>
+				// Adicionando efeito de clique
+				document.addEventListener('DOMContentLoaded', function() {
+					const card = document.querySelector('.card-kpi');
+					
+					card.addEventListener('click', function() {
+						// Animação de clique
+						card.style.animation = 'pulse 0.4s ease';
+						
+						setTimeout(() => {
+							card.style.animation = '';
+						}, 400);
+					});
+				});
+			</script>
+		</body>
+		</html>"

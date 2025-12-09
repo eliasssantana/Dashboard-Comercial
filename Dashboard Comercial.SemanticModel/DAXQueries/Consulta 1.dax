@@ -1,0 +1,537 @@
+DEFINE
+
+	/// Cria o card principal
+	FUNCTION fxMainCard = (
+		_produto: string,
+		_cor1: string
+		// _cor2: string,
+		// _cor3: string,
+		// _cor4: string
+		) =>
+ 
+		// VAR PRODUTO = SELECTEDVALUE(Produto[Produto])
+		VAR PRODUTO = _produto
+
+		VAR COR1 = _cor1
+		VAR COR2 = SELECTEDVALUE(Produto[Cor 2])
+
+		VAR COR3 = SELECTEDVALUE(Produto[Cor 4])
+		VAR COR4 = SELECTEDVALUE(Produto[Cor 3])
+
+		VAR URL_IMAGEM = SELECTEDVALUE(Produto[URL])
+
+		-- Valores de vendas agregados
+		VAR QTDE = [Qtd. Vendida]
+		VAR VLR = [Valor Vendido]
+		VAR CUSTO = [Custo Venda]
+		VAR META = [Meta Venda]
+
+		-- Formatações
+		VAR QTDE_FMT = FORMAT(QTDE, "#,##0")
+		VAR VLR_FMT = FORMAT(VLR, "R$ #,##0.00")
+		VAR CUSTO_FMT = FORMAT(CUSTO, "R$ #,##0.00")
+		VAR META_FMT = FORMAT(META, "R$ #,##0.00")
+
+		RETURN
+
+			"<!DOCTYPE html>
+			<html lang=""pt-br"">
+			<head>
+				<meta charset=""UTF-8"">
+				<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+				<title>Access Chrono Elite | Premium Watch</title>
+				<link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"">
+				<style>
+					/* Variáveis para personalização com RGBA */
+					:root {
+						--cor1: #"&COR1&";        /* cor primária */
+						--cor2: #"&COR2&";        /* cor secundária */
+						--cor1-rgba: "&COR3&";   /* Valores RGB para cor1 */
+						--cor2-rgba: "&COR4&"; /* Valores RGB para cor2 */
+						
+						--fundo-escuro: #0a0a10; 
+						--fundo-card: rgba(26, 26, 36, 0.9);
+						--texto-claro: #ffffff; 
+						--texto-secundario: #c0c0d0; 
+						--transicao: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+						--sombra: 0 10px 30px rgba(var(--cor1-rgba), 0.4); 
+						--borda-card: rgba(var(--cor1-rgba), 0.2);
+						--altura-container: 700px;
+						--largura-container: 650px;
+					}
+
+					* {
+						margin: 0;
+						padding: 0;
+						box-sizing: border-box;
+						font-family: 'Montserrat', 'Segoe UI', sans-serif;
+					}
+
+					body {
+						color: var(--texto-claro);
+						min-height: 100vh;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						padding: 20px;
+						overflow: hidden;
+						position: relative;
+					}
+
+					body::before {
+						content: """";
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
+						height: 100%;
+						z-index: -1;
+						opacity: 0.3;
+					}
+
+					.container {
+						width: var(--largura-container);
+						height: var(--altura-container);
+						display: flex;
+						flex-direction: column;
+						gap: 3px;
+						padding: 30px;
+						position: relative;
+						overflow: hidden;
+					}
+
+					/* Cabeçalho */
+					header {
+						text-align: center;
+						animation: fadeInDown 1s ease-out;
+						padding: 0 10px;
+						margin-bottom: 30px;
+						position: relative;
+						height: 120px;
+						display: flex;
+						flex-direction: column;
+						justify-content: center;
+					}
+
+					.titulo {
+						font-size: 1.3rem;
+						font-weight: 800;
+						background: linear-gradient(to right, var(--texto-claro), var(--cor2));
+						-webkit-background-clip: text;
+						background-clip: text;
+						color: transparent;
+						margin-bottom: 3px;
+						text-transform: uppercase;
+						letter-spacing: 2px;
+						text-shadow: 0 5px 15px rgba(var(--cor1-rgba), 0.2);
+						position: relative;
+						display: inline-block;
+					}
+
+					.titulo::after {
+						content: """";
+						position: absolute;
+						bottom: -8px;
+						left: 50%;
+						transform: translateX(-50%);
+						width: 80px;
+						height: 3px;
+						background: linear-gradient(90deg, var(--cor1), var(--cor2));
+						border-radius: 2px;
+					}
+
+					.subtitulo {
+						color: var(--texto-secundario);
+						font-size: 0.8rem;
+						line-height: 1.4;
+						max-width: 90%;
+						margin: 20px auto 0;
+						font-weight: 300;
+					}
+
+					/* Área de exibição do produto */
+					.produto-destaque {
+						position: relative;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						height: 210px;
+						margin-bottom: 20px;
+						perspective: 1000px;
+					}
+
+					.produto-container {
+						position: relative;
+						transform-style: preserve-3d;
+						animation: flutuar 10s ease-in-out infinite;
+						z-index: 2;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+					}
+
+					.imagem-produto {
+						max-width: 220px;
+						height: auto;
+						filter: drop-shadow(0 20px 30px rgba(var(--cor1-rgba), 0.4));
+						transition: var(--transicao);
+						animation: fadeInDown 1s ease-out;
+						z-index: 10;
+					}
+
+					.produto-container:hover .imagem-produto {
+						filter: drop-shadow(0 30px 40px rgba(var(--cor1-rgba), 0.6));
+						transform: rotateY(5deg) rotateX(-5deg) scale(1.03);
+					}
+
+					/* Anel pulsante */
+					.pulse-ring {
+						position: absolute;
+						width: 280px;
+						height: 280px;
+						border-radius: 50%;
+						border: 1px solid var(--cor1);
+						box-shadow: 0 0 10px rgba(var(--cor2-rgba), 0.8);
+						animation: pulsar 5s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+						z-index: 1;
+						opacity: 0;
+					}
+
+					.pulse-ring:nth-child(1) {
+						animation-delay: 0s;
+						opacity: 0.3;
+					}
+
+					.pulse-ring:nth-child(2) {
+						animation-delay: 1.6s;
+						border-color: var(--cor2);
+						box-shadow: 0 0 10px rgba(var(--cor1-rgba), 0.8);
+						opacity: 0.2;
+					}
+
+					.pulse-ring:nth-child(3) {
+						animation-delay: 3.2s;
+						border-color: var(--cor1);
+						box-shadow: 0 0 10px rgba(var(--cor2-rgba), 0.8);
+						opacity: 0.15;
+					}
+
+					/* Efeito de brilho */
+					.efeito-brilho {
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
+						height: 100%;
+						background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+						opacity: 0.2;
+						pointer-events: none;
+						animation: brilho 10s infinite alternate;
+						z-index: 5;
+						border-radius: 50%;
+						filter: blur(10px);
+					}
+
+					/* KPIs */
+					.container-kpi {
+						min-width: 200px;
+						max-width: 600px;
+						display: grid;
+						grid-template-columns: repeat(2, 1fr);
+						gap: 16px;
+						margin-top: 2px;
+					}
+
+					.card-kpi {
+						background: var(--fundo-card);
+						border-radius: 18px;
+						padding: 18px;
+						display: flex;
+						flex-direction: column;
+						position: relative;
+						overflow: hidden;
+						box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+						transition: var(--transicao);
+						transform: translateY(20px);
+						opacity: 0;
+						animation: fadeInUp 0.6s forwards;
+						border: 1px solid var(--borda-card);
+						backdrop-filter: blur(5px);
+					}
+
+					.card-kpi:nth-child(1) { animation-delay: 0.2s; }
+					.card-kpi:nth-child(2) { animation-delay: 0.4s; }
+					.card-kpi:nth-child(3) { animation-delay: 0.6s; }
+					.card-kpi:nth-child(4) { animation-delay: 0.8s; }
+
+					.card-kpi:hover {
+						transform: translateY(-5px);
+						box-shadow: var(--sombra);
+						border: 1px solid rgba(var(--cor1-rgba), 0.4);
+					}
+
+					.card-kpi::before {
+						content: '';
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
+						height: 100%;
+						background: radial-gradient(circle at center, rgba(var(--cor1-rgba), 0.1) 0%, transparent 70%);
+						opacity: 0;
+						transition: opacity 0.5s ease;
+						z-index: -1;
+					}
+
+					.card-kpi:hover::before {
+						opacity: 0.6;
+					}
+
+					.icone-kpi {
+						font-size: 1rem;
+						margin-bottom: 12px;
+						color: var(--cor2);
+						text-shadow: 0 0 8px rgba(var(--cor2-rgba), 0.3);
+						transition: var(--transicao);
+					}
+
+					.card-kpi:hover .icone-kpi {
+						transform: scale(1.08);
+						color: var(--cor1);
+					}
+
+					.valor-kpi {
+						font-size: 1.3rem;
+						font-weight: 800;
+						margin-bottom: 5px;
+						background: linear-gradient(to right, var(--cor2), var(--cor1));
+						-webkit-background-clip: text;
+						background-clip: text;
+						color: transparent;
+						text-shadow: 0 0 8px rgba(var(--cor2-rgba), 0.2);
+					}
+
+					.titulo-kpi {
+						font-size: 1rem;
+						color: var(--texto-secundario);
+						margin-bottom: 8px;
+						font-weight: 500;
+						letter-spacing: 0.5px;
+					}
+
+					.descricao-kpi {
+						font-size: 0.8rem;
+						color: var(--texto-secundario);
+						line-height: 1.5;
+						font-weight: 300;
+					}
+
+					.barra-estatistica {
+						height: 3px;
+						background: rgba(255, 255, 255, 0.1);
+						border-radius: 3px;
+						margin-top: 2px;
+						overflow: hidden;
+						position: relative;
+					}
+
+					.progresso-estatistica {
+						height: 100%;
+						background: linear-gradient(90deg, var(--cor1), var(--cor2));
+						border-radius: 3px;
+						width: 0;
+						transition: width 1.5s ease-out;
+						position: relative;
+						overflow: hidden;
+					}
+
+					.progresso-estatistica::after {
+						content: '';
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
+						height: 100%;
+						background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+						animation: progressShine 3s infinite;
+					}
+
+					/* Efeitos de partículas */
+					.particulas {
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
+						height: 100%;
+						pointer-events: none;
+						z-index: -1;
+					}
+
+					.particula {
+						position: absolute;
+						border-radius: 50%;
+						opacity: 0.15;
+						animation: floatParticle linear infinite;
+					}
+
+					/* Animações */
+					@keyframes flutuar {
+						0% { transform: translateY(0px) rotateY(-5deg); }
+						50% { transform: translateY(-15px) rotateY(5deg); }
+						100% { transform: translateY(0px) rotateY(-5deg); }
+					}
+
+					@keyframes fadeInUp {
+						to { transform: translateY(0); opacity: 1; }
+					}
+
+					@keyframes fadeInDown {
+						from { transform: translateY(-20px); opacity: 0; }
+						to { transform: translateY(0); opacity: 1; }
+					}
+
+					@keyframes brilho {
+						0% { opacity: 0.1; transform: scale(0.9); }
+						100% { opacity: 0.25; transform: scale(1.1); }
+					}
+
+					@keyframes pulsar {
+						0% { 
+							transform: scale(0.6); 
+							opacity: 0.3; 
+						}
+						70% { 
+							opacity: 0.1;
+						}
+						100% { 
+							transform: scale(1.4); 
+							opacity: 0; 
+						}
+					}
+
+					@keyframes progressShine {
+						0% { transform: translateX(-100%); }
+						100% { transform: translateX(100%); }
+					}
+
+					@keyframes floatParticle {
+						to {
+							transform: translateY(-100px);
+						}
+					}
+
+				</style>
+			</head>
+			<body>
+				<div class=""particulas"" id=""particles""></div>
+				
+				<div class=""container"">
+					<header>
+						<h1 class=""titulo"">"&PRODUTO&" Chrono Elite</h1>
+					</header>
+					
+					<div class=""produto-destaque"">
+						<div class=""pulse-ring""></div>
+						<div class=""pulse-ring""></div>
+						<div class=""pulse-ring""></div>
+						<div class=""produto-container"">
+							<img src="""&URL_IMAGEM&""" alt=""Relógio Access"" class=""imagem-produto"">
+							<div class=""efeito-brilho""></div>
+						</div>
+					</div>
+					
+					<div class=""container-kpi"">
+				<div class=""card-kpi"">
+					<i class=""fas fa-cart-shopping icone-kpi""></i>
+					<div class=""valor-kpi"">" & QTDE_FMT & "</div>
+					<div class=""titulo-kpi"">Unidades Vendidas</div>
+					<div class=""descricao-kpi"">Total comercializado do produto</div>
+					<div class=""barra-estatistica""><div class=""progresso-estatistica"" style=""width: 100%""></div></div>
+				</div>
+
+				<div class=""card-kpi"">
+					<i class=""fas fa-sack-dollar icone-kpi""></i>
+					<div class=""valor-kpi"">" & VLR_FMT & "</div>
+					<div class=""titulo-kpi"">Valor Vendido</div>
+					<div class=""descricao-kpi"">Receita bruta do item</div>
+					<div class=""barra-estatistica""><div class=""progresso-estatistica"" style=""width: 100%""></div></div>
+				</div>
+
+				<div class=""card-kpi"">
+					<i class=""fas fa-money-bill-trend-up icone-kpi""></i>
+					<div class=""valor-kpi"">" & CUSTO_FMT & "</div>
+					<div class=""titulo-kpi"">Custo Total</div>
+					<div class=""descricao-kpi"">Custo acumulado das unidades</div>
+					<div class=""barra-estatistica""><div class=""progresso-estatistica"" style=""width: 100%""></div></div>
+				</div>
+
+				<div class=""card-kpi"">
+					<i class=""fas fa-bullseye icone-kpi""></i>
+					<div class=""valor-kpi"">" & META_FMT & "</div>
+					<div class=""titulo-kpi"">Meta de Venda</div>
+					<div class=""descricao-kpi"">Objetivo estabelecido para o período</div>
+					<div class=""barra-estatistica""><div class=""progresso-estatistica"" style=""width: 100%""></div></div>
+				</div>
+					</div>
+				</div>
+
+				<script>
+					// Animação para as barras de progresso
+					document.addEventListener('DOMContentLoaded', () => {
+						const progressBars = document.querySelectorAll('.progresso-estatistica');
+						
+						setTimeout(() => {
+							progressBars.forEach(bar => {
+								const width = bar.style.width;
+								bar.style.width = '0';
+								setTimeout(() => {
+									bar.style.width = width;
+								}, 300);
+							});
+						}, 1000);
+						
+						// Efeito parallax para o produto
+						document.addEventListener('mousemove', (e) => {
+							const productContainer = document.querySelector('.produto-container');
+							const xAxis = (window.innerWidth / 2 - e.pageX) / 30;
+							const yAxis = (window.innerHeight / 2 - e.pageY) / 30;
+							productContainer.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg) translateY(${yAxis/2}px)`;
+						});
+						
+						// Criar partículas de fundo com RGBA
+						const particlesContainer = document.getElementById('particles');
+						const particleCount = 25;
+						
+						for (let i = 0; i < particleCount; i++) {
+							const particle = document.createElement('div');
+							particle.classList.add('particula');
+							
+							// Tamanho aleatório entre 2px e 6px
+							const size = Math.random() * 4 + 2;
+							particle.style.width = `${size}px`;
+							particle.style.height = `${size}px`;
+							
+							// Posição inicial aleatória
+							particle.style.left = `${Math.random() * 100}%`;
+							particle.style.top = `${Math.random() * 100 + 100}%`;
+							
+							// Escolha aleatória entre cor1 e cor2 com transparência
+							const colors = [
+								`rgba(${getComputedStyle(document.documentElement).getPropertyValue('--cor1-rgba')}, 0.3)`,
+								`rgba(${getComputedStyle(document.documentElement).getPropertyValue('--cor2-rgba')}, 0.3)`
+							];
+							const selectedColor = colors[Math.floor(Math.random() * colors.length)];
+							particle.style.background = `radial-gradient(circle, ${selectedColor}, transparent)`;
+							
+							// Duração e atraso de animação aleatórios
+							const duration = Math.random() * 25 + 15;
+							const delay = Math.random() * 5;
+							particle.style.animation = `floatParticle ${duration}s linear infinite`;
+							particle.style.animationDelay = `${delay}s`;
+							
+							particlesContainer.appendChild(particle);
+						}
+					});
+				</script>
+			</body>
+			</html>"
