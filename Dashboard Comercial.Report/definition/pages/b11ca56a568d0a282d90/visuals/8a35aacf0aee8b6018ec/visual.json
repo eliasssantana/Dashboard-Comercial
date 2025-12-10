@@ -61,7 +61,8 @@
                 }
               },
               "queryRef": "_Medidas.Valor Vendido",
-              "nativeQueryRef": "Valor Vendido"
+              "nativeQueryRef": " Vendido",
+              "displayName": " Vendido"
             }
           ]
         },
@@ -79,7 +80,8 @@
                 }
               },
               "queryRef": "_Medidas.Meta Venda",
-              "nativeQueryRef": "Meta Venda"
+              "nativeQueryRef": " Meta",
+              "displayName": " Meta"
             }
           ]
         }
@@ -135,6 +137,27 @@
                       "Percent": -0.2
                     }
                   }
+                }
+              }
+            },
+            "matchLineColor": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "legendMarkerRendering": {
+              "expr": {
+                "Literal": {
+                  "Value": "'markerOnly'"
                 }
               }
             }
@@ -311,6 +334,20 @@
                   "Value": "55D"
                 }
               }
+            },
+            "areaShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "showMarker": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
             }
           }
         }
@@ -401,6 +438,19 @@
                 }
               }
             ]
+          }
+        }
+      ],
+      "seriesLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
           }
         }
       ]
