@@ -429,5 +429,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "85867ca63d31deed1003",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Produto"
+              }
+            },
+            "Property": "Produto"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

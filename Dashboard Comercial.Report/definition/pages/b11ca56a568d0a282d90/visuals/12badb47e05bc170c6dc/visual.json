@@ -23,14 +23,32 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Card Principal"
+                  "Property": "Main Card"
                 }
               },
-              "queryRef": "_Medidas.Card Principal",
-              "nativeQueryRef": "Card Principal"
+              "queryRef": "_Medidas.Main Card",
+              "nativeQueryRef": "Main Card"
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Medidas"
+                  }
+                },
+                "Property": "Main Card"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
     "visualContainerObjects": {
@@ -49,23 +67,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "1409f5cf172288201d7b",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Medidas"
-              }
-            },
-            "Property": "Card Principal"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }
